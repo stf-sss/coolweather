@@ -80,10 +80,12 @@ public class WeatherActivity extends AppCompatActivity {
         comfortText=(TextView)findViewById(R.id.comfort_text);
         carWashText=(TextView)findViewById(R.id.car_wash_text);
         sportText=(TextView)findViewById(R.id.sport_text);
+
         swipeRefresh=(SwipeRefreshLayout)findViewById(R.id.swipe_refresh);
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         drawerLayout=(DrawerLayout)findViewById(R.id.drawer_layout);
         navButton=(Button)findViewById(R.id.nav_button);
+
         SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(this);
         String weatherString =prefs.getString("weather",null);
         if (weatherString != null){
@@ -94,10 +96,17 @@ public class WeatherActivity extends AppCompatActivity {
         }else{
             //无缓存时去服务器查询天气
             mWeatherId=getIntent().getStringExtra("weather_id");
-            String weatherId=getIntent().getStringExtra("weather_id");
+           // String weatherId=getIntent().getStringExtra("weather_id");
             weatherLayout.setVisibility(View.INVISIBLE);
             requestWeather(mWeatherId);
         }
+        //手动更换城市
+        navButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
         //下拉刷新
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.
                 OnRefreshListener(){
@@ -106,13 +115,7 @@ public class WeatherActivity extends AppCompatActivity {
                 requestWeather(mWeatherId);
             }
         });
-        //手动更换城市
-        navButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                drawerLayout.openDrawer(GravityCompat.START);
-            }
-        });
+
 
 
         String bingPic=prefs.getString("bing_pic",null);
@@ -232,7 +235,7 @@ public class WeatherActivity extends AppCompatActivity {
         sportText.setText(sport);
         weatherLayout.setVisibility(View.VISIBLE);
         Intent intent=new Intent(this, AutoUpdateService.class);
-        startActivity(intent);
+        startService(intent);
     }
 
 
